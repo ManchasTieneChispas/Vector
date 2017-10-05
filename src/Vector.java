@@ -163,11 +163,31 @@ public class Vector {
         setComp(t);
     }
 
-    /*
+    
     public static Vector cross(Vector f, Vector s) {
-
+        double[] ff = f.getRawComponents();
+        double[] ss = s.getRawComponents();
+        if (ff.length != ss.length) throw new RuntimeException("Vectors are in different dimensions.");
+        // because we checked to see if the lengths were different, we don't need to check if both are of dimensions 3 or 7
+        if (ff.length != 3 || ff.length != 7) throw new RuntimeException("Cross Product only works in 3d and 7d.");
+        
+        // init new double array to hold vector components
+        double[] tt = new double[ff.length];
+        if (ff.length == 3) {
+            for (int i = 0; i < 3; i++)
+                tt[i] = ff[(i + 1) % 3]*ss[(i + 2) % 3] - ff[(i + 2) % 3]*ss[(i + 1) % 3];
+        } else {
+            for (int i = 0; i < 7; i++) {
+                tt[i] = ff[(i + 1) % 7]*ss[(i + 3) % 7] - ff[(i + 3) % 7]*ss[(i + 1) % 7] +
+                        ff[(i + 2) % 7]*ss[(i + 6) % 7] - ff[(i + 6) % 7]*ss[(i + 2) % 7] +
+                        ff[(i + 4) % 7]*ss[(i + 5) % 7] - ff[(i + 5) % 7]*ss[(i + 5) % 7];
+            }
+        }
+        Vector t = new Vector(tt);
+        return t;
+            
     }
-    */
+    
 
     public void clear() {
         components.clear();
