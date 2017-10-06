@@ -40,8 +40,9 @@ public class Vector {
 
     private void setMag() {
         double t = 0;
-        for(int i =0; i < this.getRawComponents().length; i++) {
-            t += Math.pow(this.getRawComponents()[i], 2);
+        double tt = this.getRawComponents();
+        for(int i = 0; i < tt.length; i++) {
+            t += Math.pow(tt[i], 2);
         }
         this.mag = Math.sqrt(t);
     }
@@ -98,9 +99,10 @@ public class Vector {
 
     public static Vector opposite(Vector f) {
         Vector t = new Vector();
-        double[] tt = new double[f.getRawComponents().length];
-        for(int i = 0; i < f.getRawComponents().length; i++) {
-            tt[i] = f.getRawComponents()[i] * -1;
+        double[] ff = f.getRawComponents();
+        double[] tt = new double[ff.length];
+        for(int i = 0; i < ff.length; i++) {
+            tt[i] = ff[i] * -1;
         }
         t.setComponents(tt);
         return t;
@@ -162,13 +164,53 @@ public class Vector {
         }
         setComp(t);
     }
-
+    
+    /***
+       Not sure if this should be a void method or not. On one hand, it allows the user to make a separate vector
+       as opposed to directly modifying the original one. I just decided to make both and comment one out.
+    ***/
+    public Vector norm() {
+        double[] tt = this.getRawComponents();
+        double[] uu = new double[tt.length];
+        double m = this.magnitude();
+        for (int i = 0; i < tt.length; i++) {
+            uu[i] = tt[i] / m;
+        }
+        Vector u = new Vector(uu);
+        return u;
+    }
+    
     /*
-    public static Vector cross(Vector f, Vector s) {
-
+    public void norm() {
+        double m = this.magnitude();
+        this.divideByScalar(m);
     }
     */
-
+    
+    public static Vector cross(Vector f, Vector s) {
+        double[] ff = f.getRawComponents();
+        double[] ss = s.getRawComponents();
+        if (ff.length != ss.length) throw new RuntimeException("Vectors are in different dimensions.");
+        // because we checked to see if the lengths were different, we don't need to check if both are of dimensions 3 or 7
+        if (ff.length != 3 || ff.length != 7) throw new RuntimeException("Cross Product only works in 3d and 7d.");
+        
+        // init new double array to hold vector components
+        double[] tt = new double[ff.length];
+        if (ff.length == 3) {
+            for (int i = 0; i < 3; i++) {
+                tt[i] = ff[(i + 1) % 3]*ss[(i + 2) % 3] - ff[(i + 2) % 3]*ss[(i + 1) % 3];
+            }
+        } else {
+            for (int i = 0; i < 7; i++) {
+                tt[i] = ff[(i + 1) % 7]*ss[(i + 3) % 7] - ff[(i + 3) % 7]*ss[(i + 1) % 7] +
+                        ff[(i + 2) % 7]*ss[(i + 6) % 7] - ff[(i + 6) % 7]*ss[(i + 2) % 7] +
+                        ff[(i + 4) % 7]*ss[(i + 5) % 7] - ff[(i + 5) % 7]*ss[(i + 5) % 7];
+            }
+        }
+        Vector t = new Vector(tt);
+        return t;
+    }
+    
     public void clear() {
         components.clear();
     }
