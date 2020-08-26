@@ -1,2 +1,2 @@
 # Vector
-Mathematical vectors for Java. Will progress to other languages. Help out!
+A simple vector implementation for Java
